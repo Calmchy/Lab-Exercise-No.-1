@@ -60,12 +60,18 @@ void addData() {
 }
 
 void editData(int i) {
-    cout << "";
+    students.at(i);
+
+    cout << "Student ID: " << students.at(i)->studentID << " : "; cin >> students.at(i)->studentID;
+    cout << "Surname: " << students.at(i)->surname << " : "; cin >> students.at(i)->surname;
+    cout << "Firstname: " << students.at(i)->firstname << " : "; cin >> students.at(i)->firstname;
+    cout << "BirthDate: " << students.at(i)->birthdate << " : "; cin >> students.at(i)->birthdate;
+    cout << "Sex: " << students.at(i)->sex << " : "; cin >> students.at(i)->sex;
+
 }
 
 int main() {
-    StudentInfo* student = new StudentInfo;
-    
+
     char choice;
     int rec = 0;
 
