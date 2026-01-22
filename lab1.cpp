@@ -9,11 +9,10 @@
 using namespace std;
 
 struct StudentInfo {
-    char studentID[20];
-    char surname[30];
-    char firstname[30];
-    char civilStatus[15];
-    char birthdate[15];
+    char studentID[10];
+    char surname[20];
+    char firstname[20];
+    char birthdate[8];
     char sex;
 };
 
@@ -39,12 +38,12 @@ void loadData() {
     while (true) {
         StudentInfo* student = new StudentInfo;
 
-        mydata.getline(student->studentID, 20);
+        mydata.getline(student->studentID, 10);
         if (mydata.fail()) { delete student; break; }
 
-        mydata.getline(student->surname, 30);
-        mydata.getline(student->firstname, 30);
-        mydata.getline(student->birthdate, 15);
+        mydata.getline(student->surname, 20);
+        mydata.getline(student->firstname, 20);
+        mydata.getline(student->birthdate, 8);
         mydata >> student->sex;
         mydata.ignore();
 
@@ -92,19 +91,19 @@ void editData() {
     cout << left;
 
     cout << setw(labelW) << "Student ID" << ": " << setw(valueW) << students.at(rec)->studentID << " -> ";
-    cin.getline(temp, 20);
+    cin.getline(temp, 10);
     if (strlen(temp) > 0) { strcpy(students.at(rec)->studentID, temp); }
 
     cout << setw(labelW) << "Surname" << ": " << setw(valueW) << students.at(rec)->surname << " -> ";
-    cin.getline(temp, 30);
+    cin.getline(temp, 20);
     if (strlen(temp) > 0) { strcpy(students.at(rec)->surname, temp); }
 
     cout << setw(labelW) << "Firstname" << ": " << setw(valueW) << students.at(rec)->firstname << " -> ";
-    cin.getline(temp, 30);
+    cin.getline(temp, 20);
     if (strlen(temp) > 0) { strcpy(students.at(rec)->firstname, temp); }
 
     cout << setw(labelW) << "BirthDate" << ": " << setw(valueW) << students.at(rec)->birthdate << " -> ";
-    cin.getline(temp, 15);
+    cin.getline(temp, 8);
     if (strlen(temp) > 0) { strcpy(students.at(rec)->birthdate, temp); }
 
     cout << setw(labelW) << "Sex" << ": " << setw(valueW) << students.at(rec)->sex << " -> ";
