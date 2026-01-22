@@ -3,6 +3,8 @@
 #include <iomanip>
 #include <vector>
 #include <fstream>
+#include <cstring>
+#include <limits>
 
 using namespace std;
 
@@ -17,86 +19,114 @@ struct StudentInfo {
 
 vector<StudentInfo*> students;
 
-
 void saveData() {
     ofstream mydata("sample.txt");
 
     for (auto stu: students) {
-        mydata << stu->studentID;
-        mydata << stu->surname;
-        mydata << stu->firstname;
-        mydata << stu->birthdate;
-        mydata << stu->sex;
+        mydata << stu->studentID << "\n";
+        mydata << stu->surname << "\n";
+        mydata << stu->firstname << "\n";
+        mydata << stu->birthdate << "\n";
+        mydata << stu->sex << "\n";
     }
 
     mydata.close();
 }
 
 void loadData() {
-    char stuid[20], surn[30], fn[30], bd[15], s;
-
     ifstream mydata("sample.txt");
-    for (auto stu: students) {
+
+    while (true) {
         StudentInfo* student = new StudentInfo;
-        mydata >> student->studentID;
-        mydata >> student->surname;
-        mydata >> student->firstname;
-        mydata >> student->birthdate;
+
+        mydata.getline(student->studentID, 20);
+        if (mydata.fail()) { delete student; break; }
+
+        mydata.getline(student->surname, 30);
+        mydata.getline(student->firstname, 30);
+        mydata.getline(student->birthdate, 15);
         mydata >> student->sex;
+        mydata.ignore();
+
         students.push_back(student);
     }
+
+    mydata.close();
 }
 
 void addData() {
     StudentInfo* student = new StudentInfo;
-    cout << "ADD Record\n";
-    cout << "Student ID: "; cin >> student->studentID;
-    cout << "Surname : "; cin >> student->surname;
-    cout << "Firstname: "; cin >> student->firstname;
-    cout << "Birthdate: "; cin >> student->birthdate;
-    cout << "Sex: "; cin >> student->sex;
+
+    const int labelW = 12;
+
+    cout << "\nADD Record\n";
+    cout << left;
+
+    cout << setw(labelW) << "Student ID" << ": "; cin >> student->studentID;
+    cout << setw(labelW) << "Surname" << ": "; cin >> student->surname;
+    cout << setw(labelW) << "Firstname" << ": "; cin >> student->firstname;
+    cout << setw(labelW) << "Birthdate" << ": "; cin >> student->birthdate;
+    cout << setw(labelW) << "Sex" << ": "; cin >> student->sex;
 
     students.push_back(student);
 }
 
 void editData(int i) {
-    students.at(i);
+    i -= 1;
 
-    cout << "Student ID: " << students.at(i)->studentID << " : "; cin >> students.at(i)->studentID;
-    cout << "Surname: " << students.at(i)->surname << " : "; cin >> students.at(i)->surname;
-    cout << "Firstname: " << students.at(i)->firstname << " : "; cin >> students.at(i)->firstname;
-    cout << "BirthDate: " << students.at(i)->birthdate << " : "; cin >> students.at(i)->birthdate;
-    cout << "Sex: " << students.at(i)->sex << " : "; cin >> students.at(i)->sex;
+    if (i < 0 || i >= static_cast<int>(students.size())) {
+        cout << "Invalid record number\n";
+        return;
+    }
+
+    const int labelW = 12;
+    const int valueW = 20;
+
+    char temp[50];
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << left;
+
+    cout << setw(labelW) << "Student ID" << ": " << setw(valueW) << students.at(i)->studentID << " -> ";
+    cin.getline(temp, 20);
+    if (strlen(temp) > 0) { strcpy(students.at(i)->studentID, temp); }
+
+    cout << setw(labelW) << "Surname" << ": " << setw(valueW) << students.at(i)->surname << " -> ";
+    cin.getline(temp, 30);
+    if (strlen(temp) > 0) { strcpy(students.at(i)->surname, temp); }
+
+    cout << setw(labelW) << "Firstname" << ": " << setw(valueW) << students.at(i)->firstname << " -> ";
+    cin.getline(temp, 30);
+    if (strlen(temp) > 0) { strcpy(students.at(i)->firstname, temp); }
+
+    cout << setw(labelW) << "BirthDate" << ": " << setw(valueW) << students.at(i)->birthdate << " -> ";
+    cin.getline(temp, 15);
+    if (strlen(temp) > 0) { strcpy(students.at(i)->birthdate, temp); }
+
+    cout << setw(labelW) << "Sex" << ": " << setw(valueW) << students.at(i)->sex << " -> ";
+    cin.getline(temp, 2);
+    if (strlen(temp) > 0) { students.at(i)->sex = temp[0]; }
+}
+
+void deleteData() {
 
 }
 
 int main() {
-
     char choice;
     int rec = 0;
+
+    loadData();
 
     do {
         int count = 1;
 
-        cout << left
-     << setw(5)  << "Rec"
-     << setw(15) << "Student ID"
-     << setw(15) << "Surname"
-     << setw(15) << "Firstname"
-     << setw(15) << "BirthDate"
-     << setw(5)  << "Sex"
-     << endl;
+        cout << left << setw(5)  << "Rec" << setw(15) << "Student ID" << setw(15) << "Surname" << setw(15) << "Firstname" << setw(15) << "BirthDate" << setw(5)  << "Sex" << endl;
 
         cout << string(70, '-') << endl;
         for (auto stu: students) {
-            cout << left
-         << setw(5)  << count++
-         << setw(15) << stu->studentID
-         << setw(15) << stu->surname
-         << setw(15) << stu->firstname
-         << setw(15) << stu->birthdate
-         << setw(5)  << stu->sex
-         << endl;
+            cout << left << setw(5)  << count++ << setw(15) << stu->studentID << setw(15) << stu->surname << setw(15) << stu->firstname << setw(15) << stu->birthdate << setw(5)  << stu->sex << endl;
         }
         
 
@@ -115,19 +145,20 @@ int main() {
                 addData();
                 break;
             case 'E':
-                if (choice == 'E') {
-                    cout << "Choose record number: ";
-                    cin >> rec;
-                    editData(rec);
-                }
+                cout << "Choose record number: ";
+                cin >> rec;
+                editData(rec);
                 break;
             case 'D':
+                deleteData();
+                if (choice)
                 break;
             case 'S':
                 break;
             case 'F':
                 break;
             case 'V':
+                saveData();
                 break;
             case 'X':
                 break;
