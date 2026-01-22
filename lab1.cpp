@@ -71,10 +71,13 @@ void addData() {
     students.push_back(student);
 }
 
-void editData(int i) {
-    i -= 1;
+void editData() {
+    int rec;
 
-    if (i < 0 || i >= static_cast<int>(students.size())) {
+    cout << "Choose record number: "; cin >> rec;
+    rec -= 1;
+
+    if (rec < 0 || rec >= static_cast<int>(students.size())) {
         cout << "Invalid record number\n";
         return;
     }
@@ -88,29 +91,40 @@ void editData(int i) {
 
     cout << left;
 
-    cout << setw(labelW) << "Student ID" << ": " << setw(valueW) << students.at(i)->studentID << " -> ";
+    cout << setw(labelW) << "Student ID" << ": " << setw(valueW) << students.at(rec)->studentID << " -> ";
     cin.getline(temp, 20);
-    if (strlen(temp) > 0) { strcpy(students.at(i)->studentID, temp); }
+    if (strlen(temp) > 0) { strcpy(students.at(rec)->studentID, temp); }
 
-    cout << setw(labelW) << "Surname" << ": " << setw(valueW) << students.at(i)->surname << " -> ";
+    cout << setw(labelW) << "Surname" << ": " << setw(valueW) << students.at(rec)->surname << " -> ";
     cin.getline(temp, 30);
-    if (strlen(temp) > 0) { strcpy(students.at(i)->surname, temp); }
+    if (strlen(temp) > 0) { strcpy(students.at(rec)->surname, temp); }
 
-    cout << setw(labelW) << "Firstname" << ": " << setw(valueW) << students.at(i)->firstname << " -> ";
+    cout << setw(labelW) << "Firstname" << ": " << setw(valueW) << students.at(rec)->firstname << " -> ";
     cin.getline(temp, 30);
-    if (strlen(temp) > 0) { strcpy(students.at(i)->firstname, temp); }
+    if (strlen(temp) > 0) { strcpy(students.at(rec)->firstname, temp); }
 
-    cout << setw(labelW) << "BirthDate" << ": " << setw(valueW) << students.at(i)->birthdate << " -> ";
+    cout << setw(labelW) << "BirthDate" << ": " << setw(valueW) << students.at(rec)->birthdate << " -> ";
     cin.getline(temp, 15);
-    if (strlen(temp) > 0) { strcpy(students.at(i)->birthdate, temp); }
+    if (strlen(temp) > 0) { strcpy(students.at(rec)->birthdate, temp); }
 
-    cout << setw(labelW) << "Sex" << ": " << setw(valueW) << students.at(i)->sex << " -> ";
+    cout << setw(labelW) << "Sex" << ": " << setw(valueW) << students.at(rec)->sex << " -> ";
     cin.getline(temp, 2);
-    if (strlen(temp) > 0) { students.at(i)->sex = temp[0]; }
+    if (strlen(temp) > 0) { students.at(rec)->sex = temp[0]; }
 }
 
 void deleteData() {
+    int rec;
+    cout << "Enter record number to delete: ";
+    cin >> rec;
+    rec -= 1;
 
+    if (rec < 0 || rec >= static_cast<int>(students.size())) {
+        cout << "Invalid record\n";
+        return;
+    }
+
+    delete students[rec];
+    students.erase(students.begin() + rec);
 }
 
 int main() {
@@ -133,9 +147,12 @@ int main() {
         cout << "[A]dd [E]dit [D]elete [S]ort [F]ilter sa[V]e e[X]it\n";
         while (true) {
             cout << "Enter: "; cin >> choice;
+
+            choice = toupper(choice);
             
-            if (!choice == 'A' || !choice == 'E' || !choice == 'D' || !choice == 'S' || !choice == 'F' || !choice == 'V' || !choice == 'X') {
+            if (choice != 'A' && choice != 'E' && choice != 'D' && choice != 'S' && choice != 'F' && choice != 'V' && choice != 'X') {
                 cout << "Invalid choice pls try again.\n";
+                continue;
             }
             break;
         }
@@ -145,9 +162,7 @@ int main() {
                 addData();
                 break;
             case 'E':
-                cout << "Choose record number: ";
-                cin >> rec;
-                editData(rec);
+                editData();
                 break;
             case 'D':
                 deleteData();
@@ -164,6 +179,11 @@ int main() {
                 break;
         }
     } while (choice != 'X');
+
+    for (auto stu : students) {
+        delete stu;
+    }
+    students.clear();
 
     return 0;
 }
