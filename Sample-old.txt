@@ -1,0 +1,5 @@
+12-9-69696|Manatad|Chyril|07/09/04|M
+12-9-12345|Pagaduan|Geonard|01/24/06|M
+12-9-12346|Lelis|John Paul|05/02/05|M
+12-9-12347|Balais|Reynaldo|99/99/99|M
+12-9-12348|Corsiga|Sophia|11/23/05|F
