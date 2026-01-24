@@ -17,7 +17,7 @@ struct StudentInfo {
 
 vector<StudentInfo*> students;
 
-string filename = "Sample.txt";
+string filename = "Sample-old.txt";
 
 void delVector() {
     for (auto s: students) {
