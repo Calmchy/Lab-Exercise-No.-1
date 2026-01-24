@@ -58,6 +58,19 @@ void buffer() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+int inputInt(string text = "Enter: ") {
+    int input;
+
+    cout << text;
+    while(!(cin >> input)) {
+        cout << "\nInvalid input!\nPlease enter numbers only.\n\n" << text;
+        cin.clear();
+        buffer();
+    }
+    buffer();
+    return input;
+}
+
 string validationInput(string text, int sLimit) {
     string input;
 
@@ -98,8 +111,6 @@ char validationInput2(string text) {
 void addData() {
     StudentInfo* student = new StudentInfo;
 
-    const int labelW = 12;
-
     cout << "\nADD Record\n";
     cout << left;
 
@@ -133,6 +144,7 @@ string validationInput3(string text1, int sLimit, string old) {
 
 char validationInput4(string text, char old) {
     string newInput;
+
     while (true) {
         cout << setw(12) << text << ": " << setw(20) << old << " : ";
         getline(cin, newInput);
@@ -148,17 +160,13 @@ char validationInput4(string text, char old) {
 }
 
 void editData() {
-    int rec;
-    cout << "Choose record number: ";
-    cin >> rec;
+    int rec = inputInt("Choose record number: ");
     rec--;
 
     if (rec < 0 || rec >= static_cast<int>(students.size())) {
         cout << "Invalid record number\n";
         return;
     }
-
-    buffer();
 
     string input;
 
@@ -173,10 +181,8 @@ void editData() {
 
 
 void deleteData() {
-    int rec;
-    cout << "Enter record number to delete: ";
-    cin >> rec;
-    rec -= 1;
+    int rec = inputInt("Enter record number to delete: ");
+    rec--;
 
     if (rec < 0 || rec >= static_cast<int>(students.size())) {
         cout << "Invalid record\n";
@@ -224,38 +230,37 @@ void sortData() {
 
 void filterData() {
     char choice;
-    cout << "\nFilter by Sex\n";
 
-    while (true) {
-        cout << "[M]ale | [F]emale | [A]ll: ";
+    cout << "\nFilter by Sex\n\n";
+
+    do {
+        cout << "[M]ale | [F]emale | [A]ll | [E]xit\nEnter: ";
         cin >> choice;
 
         choice = toupper(choice);
 
         if (choice != 'M' && choice != 'F' && choice != 'A') {
             cout << "Only accept M, F or A! Please try again.\n";
-        }
-        else {
-            break;
-        }
-    }
+        } else {
+            int count = 1;
 
-    int count = 1;
+            cout << endl << string(70, '-') << "\n";
+            cout << endl << left << setw(5)  << "Rec" << setw(15) << "Student ID" << setw(15) << "Surname" << setw(15) << "Firstname" << setw(15) << "BirthDate" << setw(5)  << "Sex" << "\n\n";
+            cout << string(70, '-') << "\n\n";
 
-    cout << left << setw(5)  << "Rec" << setw(15) << "Student ID" << setw(15) << "Surname" << setw(15) << "Firstname" << setw(15) << "BirthDate" << setw(5)  << "Sex" << endl;
-
-    cout << string(70, '-') << endl;
-
-    for (auto s : students) {
-        if (choice == 'A' || s->sex == choice) {
-            cout << left << setw(5)  << count++ << setw(15) << s->studentID << setw(15) << s->surname << setw(15) << s->firstname << setw(15) << s->birthdate << setw(5)  << s->sex << endl;
+            for (auto s : students) {
+                if (choice == 'A' || s->sex == choice) {
+                    cout << left << setw(5)  << count++ << setw(15) << s->studentID << setw(15) << s->surname << setw(15) << s->firstname << setw(15) << s->birthdate << setw(5)  << s->sex << endl;
+                }
+            }
+            cout << endl << string(70, '-') << "\n\n";
         }
     }
+    while (choice != 'E');
 }
 
 void manageData() {
     char choice;
-    int rec = 0;
 
     if (filename.empty()) {
         cout << "\nNo file has been choose yet!\n\n";
@@ -369,7 +374,8 @@ int main() {
     loadData(filename);
 
     do {
-        cout << "\nActive file ["<< filename << "]\n\n[1] Create New File [2] Open an Existing File [3] Manage Data [4] Exit\nEnter: "; cin >> choice; buffer();
+        cout << "\nActive file ["<< filename << "]\n\n[1] Create New File [2] Open an Existing File [3] Manage Data [4] Exit\n";
+        choice = inputInt();
 
         switch (choice) {
             case 1:
