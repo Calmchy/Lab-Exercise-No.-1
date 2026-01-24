@@ -18,20 +18,25 @@ struct StudentInfo {
 
 vector<StudentInfo*> students;
 
-void saveData() {
-    ofstream file("sample.txt");
+string filename = "Sample.txt";
+
+void delVector() {
+    for (auto s: students) {
+        delete s;
+    }
+    students.clear();
+}
+
+void saveData(string filename) {
+    ofstream file(filename);
     for (auto s : students) {
-        file << s->studentID << "|"
-             << s->surname << "|"
-             << s->firstname << "|"
-             << s->birthdate << "|"
-             << s->sex << "\n";
+        file << s->studentID << "|" << s->surname << "|" << s->firstname << "|" << s->birthdate << "|" << s->sex << "\n";
     }
     file.close();
 }
 
-void loadData() {
-    ifstream file("sample.txt");
+void loadData(string filename) {
+    ifstream file(filename);
     string line;
 
     while (getline(file, line)) {
@@ -107,15 +112,15 @@ void addData() {
     students.push_back(student);
 }
 
-string validationInput3(string text, int sLimit, string old) {
+string validationInput3(string text1, int sLimit, string old) {
     string newInput;
 
     while (true) {
-        cout << setw(12) << text << ": ";
+        cout << setw(12) << text1 << ": " << setw(20) << old << " : ";
         getline(cin, newInput);
 
         if (newInput.length() > sLimit) {
-            cout << text << " is limited to " << sLimit << " characters. Try again.\n";
+            cout << text1 << " is limited to " << sLimit << " characters. Try again.\n";
         }
         else if (!newInput.empty()) {
             return newInput;
@@ -129,7 +134,7 @@ string validationInput3(string text, int sLimit, string old) {
 char validationInput4(string text, char old) {
     string newInput;
     while (true) {
-        cout << setw(12) << text << ": ";
+        cout << setw(12) << text << ": " << setw(20) << old << " : ";
         getline(cin, newInput);
 
         if (newInput.empty()) {
@@ -248,15 +253,18 @@ void filterData() {
     }
 }
 
-int main() {
+void manageData() {
     char choice;
     int rec = 0;
 
-    loadData();
+    if (filename.empty()) {
+        cout << "\nNo file has been choose yet!\n\n";
+        return;
+    }
 
     do {
         int count = 1;
-        cout << "Active File : [sample.txt]\n\n";
+        cout << "\nActive File : [" << filename << "]\n\n";
         cout << string(70, '-') << "\n";
         cout << left << setw(5)  << "\nRec" << setw(15) << "Student ID" << setw(15) << "Surname" << setw(15) << "Firstname" << setw(15) << "BirthDate" << setw(5)  << "Sex" << "\n\n";
 
@@ -264,6 +272,7 @@ int main() {
         for (auto stu: students) {
             cout << left << setw(5)  << count++ << setw(15) << stu->studentID << setw(15) << stu->surname << setw(15) << stu->firstname << setw(15) << stu->birthdate << setw(5)  << stu->sex << endl;
         }
+        cout << endl << string(70, '-') << "\n\n";
         
 
         cout << "[A]dd [E]dit [D]elete [S]ort [F]ilter sa[V]e e[X]it\n";
@@ -297,16 +306,90 @@ int main() {
                 filterData();
                 break;
             case 'V':
-                saveData();
+                saveData(filename);
                 break;
             case 'X':
                 break;
         }
     } while (choice != 'X');
+}
 
-    for (auto stu : students) {
-        delete stu;
+void createFile() {
+    string file_name;
+
+    cout << "\nOpen an Existing File\n\nEnter file name: ";
+    cin >> file_name;
+    buffer();
+
+    if (file_name.empty()) return;
+
+    if (file_name.length() < 4 || file_name.substr(file_name.length() - 4) != ".txt") {
+        cout << "Invalid file type! Only .txt files are allowed.\n";
+        return;
     }
+
+    ifstream check(file_name);
+    if (check.is_open()) {
+        cout << "File already exists! Use Open File instead.\n";
+        check.close();
+        return;
+    }
+    check.close();
+
+    delVector();
+    filename = file_name;
+    saveData(filename);
+
+    cout << "New file created successfully.\n";
+}
+
+void openFile() {
+    string file_name;
+
+    cout << "\nCreate New File\n\nEnter file name: "; cin >> file_name; buffer();
+
+    ifstream file(file_name);
+
+    if (!file.is_open()) {
+        cout << "File does not exist! Please try again.\n\n";
+        return;
+    }
+    delVector();
+    file.close();
+
+    filename = file_name;
+    loadData(filename);
+
+    cout << "File opened successfully.\n";
+}
+
+int main() {
+    int choice = 0;
+
+    loadData(filename);
+
+    do {
+        cout << "\nActive file ["<< filename << "]\n\n[1] Create New File [2] Open an Existing File [3] Manage Data [4] Exit\nEnter: "; cin >> choice; buffer();
+
+        switch (choice) {
+            case 1:
+                createFile();
+                break;
+            case 2:
+                openFile();
+                break;
+            case 3:
+                manageData();
+                break;
+            case 4:
+                break;
+            default:
+                cout << "Invalid input! please try again.\n\n";
+        }
+    }
+    while (choice != 4);
+
+    delVector();
     students.clear();
 
     return 0;
