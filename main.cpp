@@ -11,6 +11,7 @@ struct StudentInfo {
     string studentID;
     string surname;
     string firstname;
+    string civilStatus;
     string birthdate;
     char sex;
 };
@@ -29,8 +30,9 @@ void delVector() {
 void saveData(string filename) {
     ofstream file(filename);
     for (auto s : students) {
-        file << s->studentID << "|" << s->surname << "|" << s->firstname << "|" << s->birthdate << "|" << s->sex << "\n";
+        file << s->studentID << "|" << s->surname << "|" << s->firstname << "|" << s->civilStatus << "|" << s->birthdate << "|" << s->sex << "\n";
     }
+    cout << "Data has been save!\n\n";
     file.close();
 }
 
@@ -45,6 +47,7 @@ void loadData(string filename) {
         getline(ss, s->studentID, '|');
         getline(ss, s->surname, '|');
         getline(ss, s->firstname, '|');
+        getline(ss, s->civilStatus, '|');
         getline(ss, s->birthdate, '|');
         ss >> s->sex;
 
@@ -116,6 +119,7 @@ void addData() {
     student->studentID = validationInput("Student ID", 10);
     student->surname = validationInput("Surname", 20);
     student->firstname = validationInput("Firstname", 20);
+    student->civilStatus = validationInput("Civil Status", 15);
     student->birthdate = validationInput("Birthdate", 8);
     student->sex = validationInput2("Sex");
 
@@ -174,6 +178,7 @@ void editData() {
     students[rec]->studentID = validationInput3("Student ID", 10, students[rec]->studentID);
     students[rec]->surname = validationInput3("Surname", 20, students[rec]->surname);
     students[rec]->firstname = validationInput3("Firstname", 20, students[rec]->firstname);
+    students[rec]->civilStatus = validationInput3("Civil Status", 15, students[rec]->civilStatus);
     students[rec]->birthdate = validationInput3("Birthdate", 8, students[rec]->birthdate);
     students[rec]->sex = validationInput4("Sex", students[rec]->sex);
 }
@@ -243,16 +248,16 @@ void filterData() {
         } else {
             int count = 1;
 
-            cout << endl << string(70, '-') << "\n";
-            cout << endl << left << setw(5)  << "Rec" << setw(15) << "Student ID" << setw(15) << "Surname" << setw(15) << "Firstname" << setw(15) << "BirthDate" << setw(5)  << "Sex" << "\n\n";
-            cout << string(70, '-') << "\n\n";
+            cout << endl << string(85, '-') << "\n";
+            cout << endl << left << setw(5)  << "Rec" << setw(15) << "Student ID" << setw(15) << "Surname" << setw(15) << "Firstname" << setw(15) << "Civil Status" << setw(15) << "BirthDate" << setw(5)  << "Sex" << "\n\n";
+            cout << string(85, '-') << "\n\n";
 
             for (auto s : students) {
                 if (choice == 'A' || s->sex == choice) {
-                    cout << left << setw(5)  << count++ << setw(15) << s->studentID << setw(15) << s->surname << setw(15) << s->firstname << setw(15) << s->birthdate << setw(5)  << s->sex << endl;
+                    cout << left << setw(5)  << count++ << setw(15) << s->studentID << setw(15) << s->surname << setw(15) << s->firstname << setw(15) << s->civilStatus << setw(15) << s->birthdate << setw(5)  << s->sex << endl;
                 }
             }
-            cout << endl << string(70, '-') << "\n\n";
+            cout << endl << string(85, '-') << "\n\n";
         }
     }
     while (choice != 'E');
@@ -269,14 +274,14 @@ void manageData() {
     do {
         int count = 1;
         cout << "\nActive File : [" << filename << "]\n\n";
-        cout << string(70, '-') << "\n";
-        cout << left << setw(5)  << "\nRec" << setw(15) << "Student ID" << setw(15) << "Surname" << setw(15) << "Firstname" << setw(15) << "BirthDate" << setw(5)  << "Sex" << "\n\n";
+        cout << string(85, '-') << "\n";
+        cout << left << setw(5)  << "\nRec" << setw(15) << "Student ID" << setw(15) << "Surname" << setw(15) << "Firstname" << setw(15) << "Civil Status" << setw(15) << "BirthDate" << setw(5)  << "Sex" << "\n\n";
 
-        cout << string(70, '-') << "\n\n";
+        cout << string(85, '-') << "\n\n";
         for (auto stu: students) {
-            cout << left << setw(5)  << count++ << setw(15) << stu->studentID << setw(15) << stu->surname << setw(15) << stu->firstname << setw(15) << stu->birthdate << setw(5)  << stu->sex << endl;
+            cout << left << setw(5)  << count++ << setw(15) << stu->studentID << setw(15) << stu->surname << setw(15) << stu->firstname << setw(15) << stu->civilStatus << setw(15) << stu->birthdate << setw(5)  << stu->sex << endl;
         }
-        cout << endl << string(70, '-') << "\n\n";
+        cout << endl << string(85, '-') << "\n\n";
         
 
         cout << "[A]dd [E]dit [D]elete [S]ort [F]ilter sa[V]e e[X]it\n";

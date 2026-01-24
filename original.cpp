@@ -31,6 +31,7 @@ void saveData(string filename) {
     for (auto s : students) {
         file << s->studentID << "|" << s->surname << "|" << s->firstname << "|" << s->birthdate << "|" << s->sex << "\n";
     }
+    cout << "Data has been save!\n\n";
     file.close();
 }
 
