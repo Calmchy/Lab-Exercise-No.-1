@@ -3,7 +3,6 @@
 #include <iomanip>
 #include <vector>
 #include <fstream>
-#include <cstring>
 #include <limits>
 
 using namespace std;
